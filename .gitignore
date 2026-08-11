@@ -1,0 +1,10 @@
+# PDF extraction, screenshots, and build helpers — not part of the site
+_extract/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.tmp
+.vscode/
+.idea/
