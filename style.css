@@ -180,6 +180,11 @@ a { color: var(--cream); }
   object-fit: cover;
 }
 
+/* drop the key art below the fixed menu so it never covers the logo;
+   the crop is taken from the bottom edge instead */
+.hero-art { top: 3.4rem; }
+.hero-art img { object-position: center top; }
+
 .hero-caption {
   position: absolute;
   left: 0; right: 0;
@@ -251,7 +256,7 @@ a { color: var(--cream); }
     padding-top: 3.2rem;
   }
 
-  .hero-art { position: relative; display: block; }
+  .hero-art { position: relative; display: block; top: 0; }
 
   .hero-art img {
     position: static;
@@ -329,7 +334,13 @@ a { color: var(--cream); }
 }
 
 /* ---------- 3b. Story note ---------- */
-.story { background-image: url(assets/bg-moon.jpg); }
+.story { background-image: url(assets/bg-story.jpg); }
+
+/* lighter vignette so the bell and typewriter props stay visible */
+.story::before {
+  background:
+    linear-gradient(to bottom, rgba(7, 6, 6, .9), rgba(7, 6, 6, .18) 18%, rgba(7, 6, 6, .18) 82%, rgba(7, 6, 6, .9));
+}
 
 .story-stage {
   --tw-overlap: clamp(56px, 10vw, 90px); /* how far the typewriter climbs onto the note */
@@ -337,15 +348,18 @@ a { color: var(--cream); }
   margin: 0 auto;
 }
 
-/* CSS paper is a stand-in until the note_bg artwork lands */
+/* The paper sheet stretches with the text (plain texture survives it),
+   same trick as the refs board */
 .story-note {
   width: 100%;
-  background:
-    radial-gradient(ellipse at center, rgba(255, 251, 235, .3), rgba(255, 251, 235, 0) 72%),
-    linear-gradient(160deg, #ece3cb, #dcd1b2);
-  border-radius: 12px;
-  box-shadow: 0 18px 48px rgba(0, 0, 0, .75), inset 0 0 70px rgba(110, 92, 56, .28);
-  padding: clamp(1.9rem, 5vw, 3.4rem) clamp(1.5rem, 4.5vw, 3.2rem) calc(var(--tw-overlap) + 1.8rem);
+  background: url(assets/note_bg.webp) center / 100% 100% no-repeat;
+  padding: clamp(2.1rem, 5.5vw, 3.6rem) clamp(1.7rem, 5vw, 3.4rem) calc(var(--tw-overlap) + 1.8rem);
+  filter: drop-shadow(0 18px 42px rgba(0, 0, 0, .7));
+}
+
+@media (max-width: 640px) {
+  /* portrait-rotated sheet for tall narrow layouts, like board-v */
+  .story-note { background-image: url(assets/note_bg-v.webp); }
 }
 
 .story-text {
@@ -706,7 +720,7 @@ a { color: var(--cream); }
 }
 
 /* ---------- 10. About me ---------- */
-.author { background-image: url(assets/bg-about.jpg); }
+.author { background-image: url(assets/bg-shots.jpg); }
 
 .author-row {
   display: flex;
@@ -715,39 +729,27 @@ a { color: var(--cream); }
   gap: clamp(2rem, 6vw, 5rem);
 }
 
+/* the ornate frame is baked into the portrait itself */
 .author-portrait {
   flex: none;
-  width: clamp(200px, 26vw, 300px);
-  aspect-ratio: 4 / 5;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 4px solid var(--frame);
-  outline: 1px solid rgba(230, 222, 199, .4);
-  outline-offset: 6px;
-  box-shadow: 0 14px 44px rgba(0, 0, 0, .8);
+  width: clamp(220px, 28vw, 330px);
+  filter: drop-shadow(0 16px 40px rgba(0, 0, 0, .75));
 }
 
-.author-portrait img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: sepia(.25) brightness(.94);
-}
+.author-portrait img { width: 100%; }
 
-.author-info h2 { text-align: left; margin-bottom: .4rem; }
+.author-info { max-width: 34em; }
 
-.author-name {
-  font-family: var(--font-head);
-  font-size: clamp(1.1rem, 2.2vw, 1.45rem);
-  margin-bottom: 1.3rem;
-}
+.author-info h2 { text-align: left; margin-bottom: clamp(1rem, 2.5vw, 1.6rem); }
 
-.author-info .usp-list li { margin-bottom: .6rem; }
+.author-bio p { text-shadow: 0 2px 10px rgba(0, 0, 0, .85); }
+
+.author-bio p + p { margin-top: 1.15em; }
 
 @media (max-width: 720px) {
-  .author-row { flex-direction: column; text-align: center; }
+  .author-row { flex-direction: column; }
+  .author-portrait { width: clamp(200px, 60vw, 280px); }
   .author-info h2 { text-align: center; }
-  .author-info .usp-list { display: inline-block; text-align: left; }
 }
 
 /* ---------- 11. Screenshots ---------- */
