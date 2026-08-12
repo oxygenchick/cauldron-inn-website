@@ -180,10 +180,19 @@ a { color: var(--cream); }
   object-fit: cover;
 }
 
-/* drop the key art below the fixed menu so it never covers the logo;
-   the crop is taken from the bottom edge instead */
-.hero-art { top: 3.4rem; }
+/* never crop the top of the key art: the logo stays clear of the fixed menu
+   (the art has ~10% of forest headroom above the logo) */
 .hero-art img { object-position: center top; }
+
+/* legibility gradient behind the caption and trailer button */
+.hero-art::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 38%;
+  background: linear-gradient(to top, rgba(7, 6, 6, .82), rgba(7, 6, 6, 0));
+  pointer-events: none;
+}
 
 .hero-caption {
   position: absolute;
@@ -256,7 +265,7 @@ a { color: var(--cream); }
     padding-top: 3.2rem;
   }
 
-  .hero-art { position: relative; display: block; top: 0; }
+  .hero-art { position: relative; display: block; }
 
   .hero-art img {
     position: static;
@@ -770,6 +779,22 @@ a { color: var(--cream); }
 }
 
 .shots-grid img:hover { transform: scale(1.025); }
+
+.shots-cta { text-align: center; margin-top: clamp(1.8rem, 4.5vw, 3rem); }
+
+.presskit-btn {
+  display: inline-block;
+  font-family: var(--font-head);
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  text-decoration: none;
+  padding: .55rem 1.5rem;
+  border: 1px solid var(--cream);
+  border-radius: 2px;
+  background: rgba(7, 6, 6, .45);
+  transition: background .3s ease, color .3s ease;
+}
+
+.presskit-btn:hover { background: var(--cream); color: var(--bg); }
 
 @media (max-width: 960px) { .shots-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .shots-grid { grid-template-columns: 1fr; } }
