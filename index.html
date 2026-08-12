@@ -29,7 +29,7 @@
   </picture>
   <div class="hero-caption reveal">
     <p>A story-driven dark fairy tale psychological horror game centered on anomaly hunting</p>
-    <a class="hero-play" href="https://youtu.be/2gV6ulgVvNI" target="_blank" rel="noopener">
+    <a class="hero-play" href="#" data-trailer="https://www.youtube.com/embed/2gV6ulgVvNI?autoplay=1&rel=0">
       <svg class="hero-play-icon" viewBox="0 0 12 14" aria-hidden="true"><path d="M1 1l10 6-10 6z" fill="currentColor"/></svg>
       View trailer
     </a>
@@ -325,6 +325,13 @@
 
 <div class="lightbox" id="lightbox" hidden>
   <img src="" alt="">
+</div>
+
+<div class="video-overlay" id="videoOverlay" hidden>
+  <button class="video-close" aria-label="Close">&times;</button>
+  <div class="video-wrap">
+    <iframe id="videoFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </div>
 </div>
 
 <script src="script.js"></script>

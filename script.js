@@ -36,6 +36,34 @@ function closeLightbox() {
 }
 
 lightbox.addEventListener('click', closeLightbox);
+
+// Video overlay for the trailer
+const videoOverlay = document.getElementById('videoOverlay');
+const videoFrame = document.getElementById('videoFrame');
+
+document.querySelectorAll('[data-trailer]').forEach((btn) => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    videoFrame.src = btn.dataset.trailer;
+    videoOverlay.hidden = false;
+    document.body.style.overflow = 'hidden';
+  });
+});
+
+function closeVideo() {
+  videoOverlay.hidden = true;
+  videoFrame.src = '';
+  document.body.style.overflow = '';
+}
+
+videoOverlay.addEventListener('click', (e) => {
+  if (e.target === videoOverlay) closeVideo();
+});
+document.querySelector('.video-close').addEventListener('click', closeVideo);
+
 addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && !lightbox.hidden) closeLightbox();
+  if (e.key === 'Escape') {
+    if (!videoOverlay.hidden) closeVideo();
+    else if (!lightbox.hidden) closeLightbox();
+  }
 });
