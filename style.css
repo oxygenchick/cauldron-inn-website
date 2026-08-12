@@ -933,6 +933,26 @@ a { color: var(--cream); }
 
 .footer-item { white-space: nowrap; }
 
+.footer-social {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(1.1rem, 2.5vw, 1.6rem);
+  margin-top: clamp(2rem, 4.5vw, 3rem);
+}
+
+.footer-social a { display: inline-flex; }
+
+.footer-social img {
+  display: block;
+  width: clamp(38px, 5vw, 46px);
+  height: clamp(38px, 5vw, 46px);
+  opacity: .75;
+  transition: opacity .2s ease;
+}
+
+.footer-social a:hover img { opacity: 1; }
+
 .footer-legal {
   margin: 1.1rem auto 0;
   max-width: 680px;
