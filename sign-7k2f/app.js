@@ -101,7 +101,7 @@
       if (!f) return;
       var reader = new FileReader();
       reader.onload = function () {
-        downscaleImage(reader.result, 320, 110, function (url) {
+        downscaleImage(reader.result, 480, 200, function (url) {
           uploadedUrl = url;
           upPreview.hidden = false;
           upPreview.querySelector('img').src = url;
@@ -118,7 +118,7 @@
     function drawnDataUrl() {
       if (pad.isEmpty()) return null;
       var trimmed = trimCanvas(canvas);
-      return downscaleCanvas(trimmed, 320, 110).toDataURL('image/jpeg', 0.82);
+      return downscaleCanvas(trimmed, 480, 200).toDataURL('image/png');
     }
 
     var api = {
@@ -184,12 +184,9 @@
       var c = document.createElement('canvas');
       c.width = img.naturalWidth;
       c.height = img.naturalHeight;
-      var ctx = c.getContext('2d');
-      ctx.fillStyle = '#fff';
-      ctx.fillRect(0, 0, c.width, c.height);
-      ctx.drawImage(img, 0, 0);
+      c.getContext('2d').drawImage(img, 0, 0);
       var out = downscaleCanvas(c, maxW, maxH);
-      cb(out.toDataURL('image/jpeg', 0.82));
+      cb(out.toDataURL('image/png'));
     };
     img.src = dataUrl;
   }
@@ -252,35 +249,12 @@
       LZString.compressToEncodedURIComponent(JSON.stringify(packPayload(payload)));
   }
 
-  function buildBlobLink(blobUrl) {
-    return location.origin + location.pathname + '#b=' + encodeURIComponent(blobUrl);
-  }
-
-  async function uploadPayload(payload) {
-    var fd = new FormData();
-    fd.append('reqtype', 'fileupload');
-    fd.append('time', '72h');
-    fd.append('fileToUpload', new Blob([JSON.stringify(packPayload(payload))], { type: 'application/json' }), 'doc.json');
-    var resp = await fetch('https://litterbox.catbox.moe/resources/internals/api.php', { method: 'POST', body: fd });
-    if (!resp.ok) throw new Error('upload');
-    var url = (await resp.text()).trim();
-    if (!/^https?:\/\//.test(url)) throw new Error('upload');
-    return url;
-  }
-
   async function shortenUrl(url) {
     try {
       var r = await fetch('https://clck.ru/--?url=' + encodeURIComponent(url));
       if (r.ok) {
         var t = (await r.text()).trim();
-        if (/^https?:\/\//.test(t) && t.length < url.length) return t;
-      }
-    } catch (e) { }
-    try {
-      var r2 = await fetch('https://tinyurl.com/api-create.php?url=' + encodeURIComponent(url));
-      if (r2.ok) {
-        var t2 = (await r2.text()).trim();
-        if (/^https?:\/\//.test(t2)) return t2;
+        if (/^https?:\/\//.test(t)) return t;
       }
     } catch (e) { }
     return null;
@@ -402,25 +376,15 @@
 
       try {
         var fullLink = buildHashLink(payload);
-        var storageNote = '';
-
-        /* если с подписью ссылка всё ещё очень длинная — выносим данные на внешнее хранилище */
-        if (fullLink.length > 7500) {
-          var blobUrl = await uploadPayload(payload);
-          fullLink = buildBlobLink(blobUrl);
-          storageNote = ' Данные хранятся на внешнем сервере 72 часа — попросите исполнителя подписать в этот срок.';
-        }
-
-        var sendLink = fullLink;
         var shortLink = await shortenUrl(fullLink);
-        if (shortLink) sendLink = shortLink;
+        var sendLink = shortLink || fullLink;
 
         $('linkOut').hidden = false;
         $('linkText').value = sendLink;
         $('btnOpen').href = fullLink;
 
-        var backupEl = $('linkBackup');
         var backupWrap = $('linkBackupWrap');
+        var backupEl = $('linkBackup');
         if (shortLink && shortLink !== fullLink) {
           backupWrap.hidden = false;
           backupEl.value = fullLink;
@@ -428,18 +392,10 @@
           backupWrap.hidden = true;
           backupEl.value = '';
         }
-
-        var hint = shortLink
-          ? 'Короткая ссылка (~' + sendLink.length + ' символов) — удобно для Telegram и мессенджеров.'
-          : 'Полная ссылка (' + fullLink.length.toLocaleString('ru-RU') + ' симв.) — отправьте по e-mail или файлом (.txt).';
-        hint += storageNote;
-        if (incSig && fullLink.length > 2500 && !storageNote) {
-          hint += ' Если короткая ссылка не откроется — используйте резервную полную ссылку ниже.';
-        }
-        $('linkHint').textContent = hint;
+        $('linkHint').textContent = '';
         $('linkOut').scrollIntoView({ behavior: 'smooth' });
       } catch (err) {
-        alert('Не удалось создать ссылку. Попробуйте снять галочку «Вставить мою подпись» — без неё ссылка будет короче.');
+        alert('Не удалось создать ссылку. Попробуйте ещё раз.');
       } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Создать ссылку для исполнителя';
@@ -584,22 +540,6 @@
   async function bootstrap() {
     var hash = location.hash;
 
-    var bm = hash.match(/^#b=(.+)$/);
-    if (bm) {
-      try {
-        var blobUrl = decodeURIComponent(bm[1]);
-        var resp = await fetch(blobUrl);
-        if (!resp.ok) throw new Error('fetch');
-        var d = unpackPayload(await resp.json());
-        if (!d || !d.z) throw new Error('bad');
-        initExec(d);
-        return;
-      } catch (e) {
-        showFatal('Не удалось загрузить документ. Возможно, истёк срок хранения (72 ч.) — попросите заказчика создать ссылку заново.');
-        return;
-      }
-    }
-
     var dm = hash.match(/^#d=(.+)$/);
     if (dm) {
       try {
@@ -608,7 +548,7 @@
         initExec(d2);
         return;
       } catch (e) {
-        showFatal('Не удалось открыть документ: ссылка повреждена или обрезана. Попросите заказчика прислать ссылку заново (лучше файлом или по e-mail).');
+        showFatal('Не удалось открыть документ: ссылка повреждена или обрезана. Попросите заказчика прислать ссылку заново.');
         return;
       }
     }
