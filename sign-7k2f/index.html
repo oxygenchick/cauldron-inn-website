@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="referrer" content="no-referrer">
+<title>Оформление документов</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<main class="wrap">
+
+  <!-- ============ РЕЖИМ ЗАКАЗЧИКА ============ -->
+  <section id="clientView" hidden>
+    <h1>Документы с исполнителем</h1>
+    <p class="muted">Заполните условия и свои данные, создайте ссылку и отправьте её исполнителю.
+      Исполнитель впишет свои данные, поставит подпись — подписанный PDF скачается у него и придёт вам на почту.</p>
+
+    <details class="help">
+      <summary>Как это работает и что важно знать</summary>
+      <ol>
+        <li>Выберите тип документа, заполните условия сделки и свои данные (они сохраняются в этом браузере).</li>
+        <li>Нарисуйте или загрузите свою подпись — она будет вставлена в документ рядом с подписью исполнителя.</li>
+        <li>Нажмите «Создать ссылку» и отправьте её исполнителю. Все данные зашиты в саму ссылку — сервер ничего не хранит.</li>
+        <li>Ссылка длинная: лучше отправлять её по e-mail или файлом. Telegram может обрезать сообщения длиннее ~4000 знаков — тогда отправьте ссылку текстовым файлом (кнопка ниже).</li>
+        <li><b>Перед первым использованием:</b> письма отправляются через сервис FormSubmit. После самой первой отправки на ваш адрес придёт письмо от FormSubmit с просьбой подтвердить e-mail — подтвердите его, иначе следующие письма не будут доходить. Рекомендуем сначала проверить всё на себе: откройте созданную ссылку сами, подпишитесь тестовыми данными и отправьте.</li>
+      </ol>
+    </details>
+
+    <form id="clientForm" autocomplete="off">
+      <fieldset>
+        <legend>Тип документа</legend>
+        <label class="radio"><input type="radio" name="doctype" value="done" checked>
+          <span><b>Работа уже выполнена и оплачена</b> (типично для Kwork) — договор об отчуждении исключительного права со встроенным актом. Один документ, подписывается один раз.</span></label>
+        <label class="radio"><input type="radio" name="doctype" value="order">
+          <span><b>Работа только предстоит</b> — договор авторского заказа с отчуждением исключительного права. После сдачи работы подпишите отдельный акт (третий вариант).</span></label>
+        <label class="radio"><input type="radio" name="doctype" value="act">
+          <span><b>Акт к ранее заключённому договору</b> — фиксирует передачу файлов, оплату и переход прав.</span></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Условия</legend>
+        <div class="grid3">
+          <label>Номер документа <input type="text" id="f_num" required></label>
+          <label>Дата документа <input type="text" id="f_date" class="date-ru" inputmode="numeric" placeholder="ДД.ММ.ГГГГ" maxlength="10" required></label>
+          <label>Город <input type="text" id="f_city" placeholder="Москва" required></label>
+        </div>
+        <div data-show="act" class="grid2">
+          <label>Номер договора, к которому акт <input type="text" id="f_refNum" placeholder="ОИП-260801-11"></label>
+          <label>Дата того договора <input type="text" id="f_refDate" class="date-ru" inputmode="numeric" placeholder="ДД.ММ.ГГГГ" maxlength="10"></label>
+        </div>
+        <label data-show="done order">Вид работы (кратко)
+          <input type="text" id="f_work" placeholder="Серия из 5 иллюстраций персонажей для компьютерной игры"></label>
+        <label data-show="done order">Описание / задание (необязательно)
+          <textarea id="f_desc" rows="2" placeholder="Стиль, размеры, форматы, требования…"></textarea></label>
+        <label data-show="done act">Перечень передаваемых произведений/файлов
+          <textarea id="f_files" rows="2" placeholder="hero_01.png, hero_02.png, исходники hero.psd…"></textarea></label>
+        <label data-show="order" class="w-narrow">Срок сдачи работы
+          <input type="text" id="f_deadline" class="date-ru" inputmode="numeric" placeholder="ДД.ММ.ГГГГ" maxlength="10"></label>
+        <div class="grid3">
+          <label>Сумма, ₽ <input type="number" id="f_price" min="1" step="1" required></label>
+          <label>из них за создание, ₽ <input type="number" id="f_priceCreate" min="0" step="1"></label>
+          <label>за отчуждение права, ₽ <input type="number" id="f_priceTransfer" min="0" step="1"></label>
+        </div>
+        <div class="grid2">
+          <label>Способ оплаты
+            <select id="f_pay">
+              <option value="kwork">Через сервис kwork.ru</option>
+              <option value="direct">Перевод напрямую</option>
+              <option value="other">Другое (укажите рядом)</option>
+            </select></label>
+          <label>Уточнение (№ заказа и т.п.) <input type="text" id="f_payInfo" placeholder="заказ № 1234567"></label>
+        </div>
+        <label class="check" data-show="done order"><input type="checkbox" id="f_portfolio">
+          <span>Разрешить исполнителю показывать работу в личном портфолио (с пометкой, что права — у вас)</span></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Мои данные (заказчик)</legend>
+        <div class="grid2">
+          <label>ФИО полностью <input type="text" id="z_fio" required></label>
+          <label>Дата рождения <input type="text" id="z_birth" class="date-ru" inputmode="numeric" placeholder="ДД.ММ.ГГГГ" maxlength="10"></label>
+        </div>
+        <label>Паспорт (серия, номер, кем и когда выдан) — желательно
+          <input type="text" id="z_passport" placeholder="0000 000000, выдан …, 01.01.2020"></label>
+        <div class="grid2">
+          <label>Адрес регистрации <input type="text" id="z_addr"></label>
+          <label>ИНН (необязательно) <input type="text" id="z_inn"></label>
+        </div>
+        <label class="w-half">E-mail (сюда придёт подписанный PDF) <input type="email" id="z_email" required></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Моя подпись</legend>
+        <div id="sigClient"></div>
+        <label class="check"><input type="checkbox" id="f_incSig" checked>
+          <span>Вставить мою подпись в документ (рекомендуется — документ будет подписан обеими сторонами сразу)</span></label>
+      </fieldset>
+
+      <button type="submit" class="btn primary">Создать ссылку для исполнителя</button>
+    </form>
+
+    <div id="linkOut" class="linkout" hidden>
+      <h2>Ссылка готова</h2>
+      <textarea id="linkText" rows="4" readonly></textarea>
+      <div class="btnrow">
+        <button class="btn" id="btnCopy">Скопировать ссылку</button>
+        <button class="btn" id="btnLinkFile">Скачать ссылку файлом (.txt)</button>
+        <a class="btn" id="btnOpen" target="_blank" rel="noopener">Открыть предпросмотр</a>
+      </div>
+      <p class="muted" id="linkHint"></p>
+    </div>
+  </section>
+
+  <!-- ============ РЕЖИМ ИСПОЛНИТЕЛЯ ============ -->
+  <section id="execView" hidden>
+    <h1>Подписание документа</h1>
+    <p class="muted">Заказчик подготовил документ и просит вас его подписать.
+      Проверьте условия, впишите свои данные, поставьте подпись — PDF скачается вам и автоматически отправится заказчику.</p>
+
+    <div class="summary" id="execSummary"></div>
+
+    <form id="execForm" autocomplete="off">
+      <fieldset>
+        <legend>Ваши данные</legend>
+        <div class="grid2">
+          <label>ФИО полностью <input type="text" id="e_fio" required></label>
+          <label>Дата рождения <input type="text" id="e_birth" class="date-ru" inputmode="numeric" placeholder="ДД.ММ.ГГГГ" maxlength="10" required></label>
+        </div>
+        <label>Паспорт (серия, номер, кем и когда выдан) — желательно
+          <input type="text" id="e_passport" placeholder="0000 000000, выдан …, 01.01.2020"></label>
+        <div class="grid2">
+          <label>Адрес регистрации <input type="text" id="e_addr" required></label>
+          <label>E-mail <input type="email" id="e_email" required></label>
+        </div>
+        <div class="grid2">
+          <label>ИНН (необязательно) <input type="text" id="e_inn"></label>
+          <label class="check tall"><input type="checkbox" id="e_se">
+            <span>Я самозанятый(-ая) (плательщик НПД)</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Ваша подпись</legend>
+        <div id="sigExec"></div>
+      </fieldset>
+
+      <label class="check consent"><input type="checkbox" id="e_consent" required>
+        <span>Я ознакомился(-ась) с полным текстом документа (ниже) и согласен(-на) с его условиями.
+          Я понимаю, что изображение моей подписи будет вставлено в документ и что такое подписание
+          признаётся сторонами равнозначным собственноручному (п. 2 ст. 160 ГК РФ).</span></label>
+
+      <button type="submit" class="btn primary" id="btnSign">Подписать: скачать PDF и отправить заказчику</button>
+      <div id="execStatus" class="status" hidden></div>
+    </form>
+
+    <h2 class="pv-heading">Текст документа</h2>
+    <div class="preview" id="docPreview"></div>
+  </section>
+
+  <p class="err" id="fatalErr" hidden></p>
+</main>
+
+<script src="vendor/lz-string.min.js"></script>
+<script src="vendor/signature_pad.umd.min.js"></script>
+<script src="vendor/pdf-lib.min.js"></script>
+<script src="vendor/fontkit.umd.min.js"></script>
+<script src="docs.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
