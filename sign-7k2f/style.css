@@ -147,9 +147,13 @@ input.date-ru { font-variant-numeric: tabular-nums; }
 .linkout h2 { margin-top: 0; }
 .linkout textarea {
   font-family: monospace;
-  font-size: .78rem;
+  font-size: .85rem;
   word-break: break-all;
 }
+.linkout-label { margin: 0 0 6px; }
+.link-backup { margin: 10px 0; font-size: .92rem; }
+.link-backup summary { cursor: pointer; color: var(--muted); }
+.link-backup textarea { margin-top: 8px; font-size: .72rem; }
 
 /* --- Сводка условий (исполнитель) --- */
 .summary {
