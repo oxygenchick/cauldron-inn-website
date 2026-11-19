@@ -163,51 +163,117 @@ a { color: var(--cream); }
 @media (max-width: 640px) {
   .topbar-nav { font-size: .85rem; gap: .8rem; }
   .topbar-cta { padding: .3rem .7rem; }
+  .topbar-trailer { display: none; }
 }
 
 /* ---------- 1. Hero ---------- */
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* The logo is painted into the bottom of the key art, so the art is always
+   anchored to the bottom edge and only ever loses forest at the top.
+   Height is clamped between "fill the screen" and "112% of the screen":
+   narrow windows crop the curtains at the sides, wide windows crop the top,
+   ultra-wide windows get dark side margins instead of losing the mask's eyes. */
 .hero {
   position: relative;
   height: 100svh;
   min-height: 480px;
+  overflow: hidden;
+  background: var(--bg);
 }
 
-.hero-art, .hero-art img {
+.hero-art {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
-/* never crop the top of the key art: the logo stays clear of the fixed menu
-   (the art has ~10% of forest headroom above the logo) */
-.hero-art img { object-position: center top; }
+.hero-art img {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  height: clamp(100%, 56.25vw, 112%);
+  width: auto;
+  max-width: none;
+}
 
-/* legibility gradient behind the caption and trailer button */
-.hero-art::after {
+/* menu legibility on top, seamless fade into the page at the bottom */
+.hero::before,
+.hero::after {
   content: "";
   position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 38%;
-  background: linear-gradient(to top, rgba(7, 6, 6, .82), rgba(7, 6, 6, 0));
+  left: 0; right: 0;
+  z-index: 1;
   pointer-events: none;
 }
 
-.hero-caption {
-  position: absolute;
-  left: 0; right: 0;
-  bottom: clamp(3.2rem, 8vh, 5rem);
-  text-align: center;
-  padding: 0 6vw;
+.hero::before {
+  top: 0;
+  height: 9rem;
+  background: linear-gradient(to bottom, rgba(7, 6, 6, .7), rgba(7, 6, 6, 0));
 }
 
-.hero-caption p {
+.hero::after {
+  bottom: 0;
+  height: 6%;
+  background: linear-gradient(to top, var(--bg), rgba(7, 6, 6, 0));
+}
+
+@media (min-aspect-ratio: 2/1) {
+  .hero-art img {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  }
+}
+
+/* Portrait tablets and square windows: vertical art, same bottom anchoring */
+@media (max-aspect-ratio: 1/1) {
+  .hero-art img { height: clamp(100%, 150vw, 112%); }
+}
+
+@media (max-aspect-ratio: 1/1) and (min-aspect-ratio: 3/4) {
+  .hero-art img {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  }
+}
+
+/* Phones: the logo spans most of the art's width, so the vertical art is shown
+   uncropped at full width and the tagline follows right under it */
+@media (max-aspect-ratio: 2/3) {
+  .hero { height: auto; min-height: 0; }
+  .hero-art { position: relative; display: block; }
+  .hero-art img {
+    position: static;
+    transform: none;
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* ---------- 1b. Tagline and trailer ---------- */
+.intro {
+  background: var(--bg);
+  text-align: center;
+  padding: clamp(2.5rem, 6vw, 4.5rem) 6vw 0;
+}
+
+.intro-tagline {
   font-family: var(--font-head);
-  font-size: clamp(1.05rem, 2.6vw, 1.7rem);
-  max-width: 34em;
+  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+  line-height: 1.45;
+  max-width: 30em;
   margin: 0 auto;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, .9), 0 0 30px rgba(0, 0, 0, .7);
+}
+
+@media (max-aspect-ratio: 2/3) {
+  .intro { padding-top: 1.2rem; }
 }
 
 /* Styled to match the "Wishlist on Steam" button in the top bar */
@@ -215,7 +281,7 @@ a { color: var(--cream); }
   display: inline-flex;
   align-items: center;
   gap: .6rem;
-  margin-top: 1.4rem;
+  margin-top: 1.6rem;
   font-family: var(--font-head);
   font-size: clamp(.95rem, 1.8vw, 1.1rem);
   text-decoration: none;
@@ -232,65 +298,6 @@ a { color: var(--cream); }
   width: .7em;
   height: .82em;
   flex: none;
-}
-
-.hero-scroll {
-  position: absolute;
-  left: 50%;
-  bottom: 1rem;
-  transform: translateX(-50%);
-  text-decoration: none;
-  opacity: .85;
-  animation: bob 2.2s ease-in-out infinite;
-}
-
-.hero-scroll img {
-  width: clamp(16px, 1.6vw, 20px);
-  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, .7));
-}
-
-@keyframes bob {
-  0%, 100% { transform: translate(-50%, 0); }
-  50% { transform: translate(-50%, 8px); }
-}
-
-/* Portrait phones/tablets: vertical key art shown uncropped,
-   caption, trailer button and arrow overlaid on its lower part */
-@media (max-aspect-ratio: 4/5) {
-  .hero {
-    height: auto;
-    min-height: 0;
-    display: block;
-    background: #000;
-    padding-top: 3.2rem;
-  }
-
-  .hero-art { position: relative; display: block; }
-
-  .hero-art img {
-    position: static;
-    width: 100%;
-    height: auto;
-  }
-
-  /* legibility gradient behind the overlaid caption */
-  .hero-art::after {
-    content: "";
-    position: absolute;
-    left: 0; right: 0; bottom: 0;
-    height: 45%;
-    background: linear-gradient(to top, rgba(7, 6, 6, .9), rgba(7, 6, 6, 0));
-    pointer-events: none;
-  }
-
-  .hero-caption {
-    position: absolute;
-    left: 0; right: 0;
-    bottom: clamp(3.4rem, 14vw, 6rem);
-    padding: 0 6vw;
-  }
-
-  .hero-scroll { bottom: .9rem; }
 }
 
 /* ---------- 2. Facts ---------- */

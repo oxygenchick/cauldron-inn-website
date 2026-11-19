@@ -16,6 +16,7 @@
 <header class="topbar" id="topbar">
   <nav class="topbar-nav">
     <a href="#about">About</a>
+    <a class="topbar-trailer" href="#" data-trailer="https://www.youtube.com/embed/_yV61SsTjs4?autoplay=1&rel=0">Trailer</a>
     <a href="#media-kit">Media Kit</a>
     <a class="topbar-cta" href="https://store.steampowered.com/app/4680470/Cauldron_Inn/" target="_blank" rel="noopener">Wishlist on Steam</a>
   </nav>
@@ -23,18 +24,20 @@
 
 <!-- 1. Hero -->
 <section class="hero" id="hero">
+  <h1 class="visually-hidden">Cauldron Inn</h1>
   <picture class="hero-art">
-    <source media="(max-aspect-ratio: 4/5)" srcset="assets/hero-v.jpg">
-    <img src="assets/hero-h.jpg" alt="Cauldron Inn — key art: a cat beside a typewriter at a desk in a dark forest">
+    <source media="(max-aspect-ratio: 1/1)" srcset="assets/hero-v.jpg">
+    <img src="assets/hero-h.jpg" alt="Cauldron Inn — key art: a grinning wooden mask looms over a cat and a typewriter on a desk">
   </picture>
-  <div class="hero-caption reveal">
-    <p>A story-driven dark fairy tale psychological horror game centered on anomaly hunting</p>
-    <a class="hero-play" href="#" data-trailer="https://www.youtube.com/embed/_yV61SsTjs4?autoplay=1&rel=0">
-      <svg class="hero-play-icon" viewBox="0 0 12 14" aria-hidden="true"><path d="M1 1l10 6-10 6z" fill="currentColor"/></svg>
-      View trailer
-    </a>
-  </div>
-  <a class="hero-scroll" href="#facts" aria-label="Scroll down"><img src="assets/arrow_down.png" alt=""></a>
+</section>
+
+<!-- 1b. Tagline and trailer -->
+<section class="intro">
+  <p class="intro-tagline reveal">A story-driven dark fairy tale psychological horror game centered on anomaly hunting</p>
+  <a class="hero-play reveal" href="#" data-trailer="https://www.youtube.com/embed/_yV61SsTjs4?autoplay=1&rel=0">
+    <svg class="hero-play-icon" viewBox="0 0 12 14" aria-hidden="true"><path d="M1 1l10 6-10 6z" fill="currentColor"/></svg>
+    View trailer
+  </a>
 </section>
 
 <!-- 2. Facts -->
