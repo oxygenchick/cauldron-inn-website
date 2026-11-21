@@ -38,6 +38,15 @@
     <svg class="hero-play-icon" viewBox="0 0 12 14" aria-hidden="true"><path d="M1 1l10 6-10 6z" fill="currentColor"/></svg>
     View trailer
   </a>
+  <form class="subscribe subscribe-top subscribe-note reveal" data-source="top" novalidate>
+    <p class="subscribe-label">Get important news and the release date</p>
+    <div class="subscribe-row">
+      <input class="subscribe-input" type="email" name="email" placeholder="your@email.com" aria-label="Email address" autocomplete="email" required>
+      <button class="subscribe-btn" type="submit">Subscribe</button>
+    </div>
+    <p class="subscribe-error" role="alert" hidden></p>
+    <p class="subscribe-done" role="status" hidden>You&rsquo;re subscribed. The Inn will send word.</p>
+  </form>
 </section>
 
 <!-- 2. Facts -->
@@ -278,7 +287,6 @@
     </p>
   </div>
 </section>
-
 <!-- 12. Contacts (temporarily hidden) -->
 <section class="section contacts" id="contacts" hidden>
   <div class="wrap contacts-row">
@@ -310,6 +318,18 @@
   </div>
   <p class="footer-note">&copy; 2026 Oxygen Chick &middot; Cauldron Inn</p>
 </section>
+
+<div class="subscribe-block">
+  <form class="subscribe subscribe-bottom subscribe-note reveal" id="subscribe" data-source="footer" novalidate>
+    <p class="subscribe-label">Get important news and the release date</p>
+    <div class="subscribe-row">
+      <input class="subscribe-input" type="email" name="email" placeholder="your@email.com" aria-label="Email address" autocomplete="email" required>
+      <button class="subscribe-btn" type="submit">Subscribe</button>
+    </div>
+    <p class="subscribe-error" role="alert" hidden></p>
+    <p class="subscribe-done" role="status" hidden>You&rsquo;re subscribed. The Inn will send word.</p>
+  </form>
+</div>
 
 <div class="oc-block">
   <img class="footer-logo reveal" src="assets/logo_2.png" alt="Oxygen Chick">

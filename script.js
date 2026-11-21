@@ -61,6 +61,67 @@ videoOverlay.addEventListener('click', (e) => {
 });
 document.querySelector('.video-close').addEventListener('click', closeVideo);
 
+// Newsletter forms (top and bottom share one state)
+// FormSubmit relays every new subscriber to this mailbox
+const SUBSCRIBE_URL = 'https://formsubmit.co/ajax/gsabaka@gmail.com';
+const subscribeForms = document.querySelectorAll('.subscribe');
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function markSubscribed() {
+  subscribeForms.forEach((f) => {
+    f.classList.remove('sending');
+    f.classList.add('done');
+    f.querySelector('.subscribe-error').hidden = true;
+    f.querySelector('.subscribe-done').hidden = false;
+  });
+}
+
+function showSubscribeError(form, text) {
+  const err = form.querySelector('.subscribe-error');
+  err.textContent = text;
+  err.hidden = false;
+}
+
+subscribeForms.forEach((form) => {
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (form.classList.contains('sending')) return;
+
+    const input = form.querySelector('.subscribe-input');
+    const email = input.value.trim();
+    if (!EMAIL_RE.test(email)) {
+      showSubscribeError(form, 'Please enter a valid email address.');
+      input.focus();
+      return;
+    }
+
+    form.querySelector('.subscribe-error').hidden = true;
+    form.classList.add('sending');
+    try {
+      const res = await fetch(SUBSCRIBE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          email,
+          form: form.dataset.source || '',
+          _subject: `Cauldron Inn: new subscriber ${email}`,
+          _template: 'table',
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || String(data.success) !== 'true') throw new Error(data.message);
+      markSubscribed();
+    } catch {
+      form.classList.remove('sending');
+      showSubscribeError(form, 'Something went wrong. Please try again.');
+    }
+  });
+
+  form.querySelector('.subscribe-input').addEventListener('input', () => {
+    form.querySelector('.subscribe-error').hidden = true;
+  });
+});
+
 addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     if (!videoOverlay.hidden) closeVideo();
