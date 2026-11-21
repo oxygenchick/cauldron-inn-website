@@ -90,7 +90,7 @@ subscribeForms.forEach((form) => {
     const input = form.querySelector('.subscribe-input');
     const email = input.value.trim();
     if (!EMAIL_RE.test(email)) {
-      showSubscribeError(form, 'Please enter a valid email address.');
+      showSubscribeError(form, t('subscribeInvalid', 'Please enter a valid email address.'));
       input.focus();
       return;
     }
@@ -99,27 +99,31 @@ subscribeForms.forEach((form) => {
     const btn = form.querySelector('.subscribe-btn');
     form.classList.add('sending');
     btn.disabled = true;
-    btn.textContent = 'Sending\u2026';
+    btn.textContent = t('subscribeSending', 'Sending\u2026');
     try {
       // Apps Script answers through a cross-origin redirect, so the response is opaque
       await fetch(SUBSCRIBE_URL, {
         method: 'POST',
         mode: 'no-cors',
-        body: new URLSearchParams({ email, source: form.dataset.source || '' }),
+        body: new URLSearchParams({ email, source: `${form.dataset.source || ''} ${currentLang()}`.trim() }),
       });
       markSubscribed();
     } catch {
-      showSubscribeError(form, 'Something went wrong. Please try again.');
+      showSubscribeError(form, t('subscribeFailed', 'Something went wrong. Please try again.'));
     } finally {
       form.classList.remove('sending');
       btn.disabled = false;
-      btn.textContent = 'Subscribe';
+      btn.textContent = t('subscribe', 'Subscribe');
     }
   });
 
   form.querySelector('.subscribe-input').addEventListener('input', () => {
     form.querySelector('.subscribe-error').hidden = true;
   });
+});
+
+document.addEventListener('langchange', () => {
+  subscribeForms.forEach((f) => { f.querySelector('.subscribe-error').hidden = true; });
 });
 
 addEventListener('keydown', (e) => {

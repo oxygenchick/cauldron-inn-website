@@ -15,6 +15,24 @@
   src: url(assets/fonts/SpecialElite-latin.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
+/* Neither font has Cyrillic, so Russian pages switch wholesale to the closest lookalikes.
+   Mixing per glyph left Latin spaces, hyphens and digits with the wrong metrics. */
+@font-face {
+  font-family: 'TT2020 Style E';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(assets/fonts/TT2020StyleE-ru.woff2) format('woff2');
+  size-adjust: 108%;
+}
+@font-face {
+  font-family: 'Ledger';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(assets/fonts/Ledger-ru.woff2) format('woff2');
+  size-adjust: 112%;
+}
 
 /* ---------- Tokens ---------- */
 :root {
@@ -25,6 +43,11 @@
   --font-head: 'Special Elite', 'Courier New', serif;
   --font-body: 'Cutive', 'Georgia', serif;
 }
+html[lang="ru"] {
+  --font-head: 'TT2020 Style E', 'Courier New', serif;
+  --font-body: 'Ledger', 'Georgia', serif;
+}
+html[lang="ru"] .usp-list li::before { font-family: 'Cutive', serif; top: .18em; }
 
 [hidden] { display: none !important; }
 
@@ -47,6 +70,7 @@ h2 {
   font-family: var(--font-head);
   font-weight: 400;
   font-size: clamp(2rem, 5vw, 3.4rem);
+  line-height: 1.2;
   text-align: center;
   letter-spacing: .02em;
   margin-bottom: clamp(1.6rem, 4vw, 3rem);
@@ -159,6 +183,32 @@ a { color: var(--cream); }
 }
 
 .topbar-cta:hover { background: var(--cream); color: var(--bg); text-decoration: none !important; }
+
+.lang-switch { display: flex; align-items: center; }
+.lang-switch button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: .2rem .3rem;
+  cursor: pointer;
+  opacity: .45;
+}
+.lang-switch button + button::before {
+  content: '/';
+  margin-right: .6rem;
+  opacity: .6;
+  display: inline-block;
+  pointer-events: none;
+}
+.lang-switch button:hover { opacity: .85; }
+.lang-switch button[aria-pressed="true"] {
+  opacity: 1;
+  cursor: default;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.lang-switch button[aria-pressed="true"]::before { text-decoration: none; }
 
 @media (max-width: 640px) {
   .topbar-nav { font-size: .85rem; gap: .8rem; }

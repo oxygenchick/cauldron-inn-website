@@ -3,8 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cauldron Inn — A Dark Fairy Tale Psychological Horror Game</title>
-<meta name="description" content="Cauldron Inn is a story-driven dark fairy tale psychological horror game centered on anomaly hunting. Wishlist on Steam.">
+<script>
+  // Pick the language before anything paints: ?lang= link, then a saved choice, then the browser
+  (function () {
+    var lang = new URLSearchParams(location.search).get('lang');
+    if (!lang) { try { lang = localStorage.getItem('lang'); } catch (e) {} }
+    if (lang !== 'en' && lang !== 'ru') {
+      var prefs = navigator.languages || [navigator.language || 'en'];
+      lang = 'en';
+      for (var i = 0; i < prefs.length; i++) {
+        var code = String(prefs[i]).slice(0, 2).toLowerCase();
+        if (code === 'en') break;
+        if (code === 'ru' || code === 'be' || code === 'kk') { lang = 'ru'; break; }
+      }
+    }
+    document.documentElement.lang = lang;
+  })();
+
+  // Point data-src-<lang> / data-srcset-<lang> images at the given language's files
+  function setLangSources(lang) {
+    document.querySelectorAll('[data-src-' + lang + '], [data-srcset-' + lang + ']').forEach(function (el) {
+      var src = el.getAttribute('data-src-' + lang);
+      var srcset = el.getAttribute('data-srcset-' + lang);
+      if (src) el.setAttribute('src', src);
+      if (srcset) el.setAttribute('srcset', srcset);
+    });
+  }
+</script>
+<title data-i18n="metaTitle">Cauldron Inn — A Dark Fairy Tale Psychological Horror Game</title>
+<meta name="description" data-i18n-content="metaDescription" content="Cauldron Inn is a story-driven dark fairy tale psychological horror game centered on anomaly hunting. Wishlist on Steam.">
 <meta property="og:title" content="Cauldron Inn">
 <meta property="og:description" content="A story-driven dark fairy tale psychological horror game centered on anomaly hunting.">
 <meta property="og:image" content="assets/hero-h.jpg">
@@ -15,37 +42,43 @@
 
 <header class="topbar" id="topbar">
   <nav class="topbar-nav">
-    <a href="#about">About</a>
-    <a class="topbar-trailer" href="#" data-trailer="https://www.youtube.com/embed/_yV61SsTjs4?autoplay=1&rel=0">Trailer</a>
-    <a href="#media-kit">Media Kit</a>
-    <a class="topbar-cta" href="https://store.steampowered.com/app/4680470/Cauldron_Inn/" target="_blank" rel="noopener">Wishlist on Steam</a>
+    <a href="#about" data-i18n="navAbout">About</a>
+    <a class="topbar-trailer" href="#" data-trailer="https://www.youtube.com/embed/_yV61SsTjs4?autoplay=1&rel=0" data-i18n="navTrailer">Trailer</a>
+    <a href="#media-kit" data-i18n="navMediaKit">Media Kit</a>
+    <a class="topbar-cta" href="https://store.steampowered.com/app/4680470/Cauldron_Inn/" target="_blank" rel="noopener" data-i18n="navWishlist">Wishlist on Steam</a>
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button type="button" data-set-lang="en" lang="en">EN</button>
+      <button type="button" data-set-lang="ru" lang="ru">RU</button>
+    </div>
   </nav>
 </header>
 
 <!-- 1. Hero -->
 <section class="hero" id="hero">
-  <h1 class="visually-hidden">Cauldron Inn</h1>
+  <h1 class="visually-hidden" data-i18n="gameName">Cauldron Inn</h1>
+  <!-- The logo is baked into the art, so the files differ per language; the script below picks one -->
   <picture class="hero-art">
-    <source media="(max-aspect-ratio: 1/1)" srcset="assets/hero-v.jpg">
-    <img src="assets/hero-h.jpg" alt="Cauldron Inn — key art: a grinning wooden mask looms over a cat and a typewriter on a desk">
+    <source media="(max-aspect-ratio: 1/1)" data-srcset-en="assets/hero-v.jpg" data-srcset-ru="assets/hero-v-ru.jpg">
+    <img data-src-en="assets/hero-h.jpg" data-src-ru="assets/hero-h-ru.jpg" fetchpriority="high" alt="Cauldron Inn — key art: a grinning wooden mask looms over a cat and a typewriter on a desk" data-i18n-alt="altHero">
   </picture>
+  <script>setLangSources(document.documentElement.lang);</script>
 </section>
 
 <!-- 1b. Tagline and trailer -->
 <section class="intro">
-  <p class="intro-tagline reveal">A story-driven dark fairy tale psychological horror game centered on anomaly hunting</p>
+  <p class="intro-tagline reveal" data-i18n="tagline">A story-driven dark fairy tale psychological horror game centered on anomaly hunting</p>
   <a class="hero-play reveal" href="#" data-trailer="https://www.youtube.com/embed/_yV61SsTjs4?autoplay=1&rel=0">
     <svg class="hero-play-icon" viewBox="0 0 12 14" aria-hidden="true"><path d="M1 1l10 6-10 6z" fill="currentColor"/></svg>
-    View trailer
+    <span data-i18n="viewTrailer">View trailer</span>
   </a>
   <form class="subscribe subscribe-top subscribe-note reveal" data-source="top" novalidate>
-    <p class="subscribe-label">Get important news and the release date</p>
+    <p class="subscribe-label" data-i18n="subscribeLabel">Get important news and the release date</p>
     <div class="subscribe-row">
-      <input class="subscribe-input" type="email" name="email" placeholder="your@email.com" aria-label="Email address" autocomplete="email" required>
-      <button class="subscribe-btn" type="submit">Subscribe</button>
+      <input class="subscribe-input" type="email" name="email" placeholder="your@email.com" aria-label="Email address" data-i18n-placeholder="emailPlaceholder" data-i18n-aria-label="emailLabel" autocomplete="email" required>
+      <button class="subscribe-btn" type="submit" data-i18n="subscribe">Subscribe</button>
     </div>
     <p class="subscribe-error" role="alert" hidden></p>
-    <p class="subscribe-done" role="status" hidden>You&rsquo;re subscribed. The Inn will send word.</p>
+    <p class="subscribe-done" role="status" hidden data-i18n="subscribeDone">You&rsquo;re subscribed. The Inn will send word.</p>
   </form>
 </section>
 
@@ -54,12 +87,12 @@
   <div class="wrap">
     <img class="flourish reveal" src="assets/flourish.png" alt="">
     <div class="facts-grid">
-      <div class="fact reveal"><h3>Genre</h3><p>Horror, adventure, simulation, puzzle</p></div>
-      <div class="fact reveal"><h3>Completion Time</h3><p>40&nbsp;&ndash;&nbsp;120 min</p></div>
-      <div class="fact reveal"><h3>Platform</h3><p>PC (Steam)</p></div>
-      <div class="fact reveal"><h3>Supported Languages</h3><p>RU, EN, CH, DE, ES, PT, KO, ZH, JA</p></div>
-      <div class="fact reveal"><h3>Development Stage</h3><p>Demo, Playtest</p></div>
-      <div class="fact reveal"><h3>Release</h3><p>Q1 &ndash; Q2 2027</p></div>
+      <div class="fact reveal"><h3 data-i18n="factGenre">Genre</h3><p data-i18n="factGenreValue">Horror, adventure, simulation, puzzle</p></div>
+      <div class="fact reveal"><h3 data-i18n="factTime">Completion Time</h3><p data-i18n="factTimeValue">40&nbsp;&ndash;&nbsp;120 min</p></div>
+      <div class="fact reveal"><h3 data-i18n="factPlatform">Platform</h3><p data-i18n="factPlatformValue">PC (Steam)</p></div>
+      <div class="fact reveal"><h3 data-i18n="factLanguages">Supported Languages</h3><p>RU, EN, CH, DE, ES, PT, KO, ZH, JA</p></div>
+      <div class="fact reveal"><h3 data-i18n="factStage">Development Stage</h3><p data-i18n="factStageValue">Demo, Playtest</p></div>
+      <div class="fact reveal"><h3 data-i18n="factRelease">Release</h3><p data-i18n="factReleaseValue">Q1 &ndash; Q2 2027</p></div>
     </div>
     <img class="flourish flourish-flip reveal" src="assets/flourish.png" alt="">
   </div>
@@ -71,10 +104,10 @@
 <section class="section about-game" id="about">
   <div class="wrap narrow">
     <img class="flourish reveal" src="assets/flourish.png" alt="">
-    <p class="lead reveal">Cauldron Inn is a story-driven fairy-tale psychological horror game centered around anomaly hunting.</p>
-    <p class="lead reveal">You wake up trapped inside a mysterious hotel from the early 20th century. To escape, you must carefully examine your surroundings and find the differences &mdash; anomalies that distort reality.</p>
+    <p class="lead reveal" data-i18n="aboutLead1">Cauldron Inn is a story-driven fairy-tale psychological horror game centered around anomaly hunting.</p>
+    <p class="lead reveal" data-i18n="aboutLead2">You wake up trapped inside a mysterious hotel from the early 20th century. To escape, you must carefully examine your surroundings and find the differences &mdash; anomalies that distort reality.</p>
     <img class="flourish flourish-flip reveal" src="assets/flourish.png" alt="">
-    <img class="about-art reveal" src="assets/roses.jpg" alt="A vase of roses with eyes">
+    <img class="about-art reveal" src="assets/roses.jpg" alt="A vase of roses with eyes" data-i18n-alt="altRoses">
   </div>
 </section>
 
@@ -86,12 +119,12 @@
     <div class="story-stage reveal">
       <div class="story-note">
         <div class="story-text">
-          <p>The early 20th century. A Siberian forest. Something sinister is pursuing you when suddenly you spot a building&mdash;an inn&mdash;and take refuge inside. But this temporary sanctuary becomes an eternal prison; time stands still, and the memory of your life vanishes in an instant.</p>
-          <p>However, you find instructions that will allow you to escape. You need to keep an eye on what is happening in the hotel. Anomalies may appear there from time to time&mdash;paranormal manifestations of evil forces. Sometimes they are hard to spot, but at other times, they actively pursue you. Whenever you discover an anomaly, you must ring the bell in one of the rooms.</p>
-          <p>What was chasing you? Someone is sending you messages in the form of straw dolls&mdash;who is it? Play the game to the end to uncover a deep narrative steeped in legend and dread, where the fates of several characters intertwine.</p>
+          <p data-i18n="story1">The early 20th century. A Siberian forest. Something sinister is pursuing you when suddenly you spot a building&mdash;an inn&mdash;and take refuge inside. But this temporary sanctuary becomes an eternal prison; time stands still, and the memory of your life vanishes in an instant.</p>
+          <p data-i18n="story2">However, you find instructions that will allow you to escape. You need to keep an eye on what is happening in the hotel. Anomalies may appear there from time to time&mdash;paranormal manifestations of evil forces. Sometimes they are hard to spot, but at other times, they actively pursue you. Whenever you discover an anomaly, you must ring the bell in one of the rooms.</p>
+          <p data-i18n="story3">What was chasing you? Someone is sending you messages in the form of straw dolls&mdash;who is it? Play the game to the end to uncover a deep narrative steeped in legend and dread, where the fates of several characters intertwine.</p>
         </div>
       </div>
-      <img class="story-typewriter" src="assets/typewriter.png" alt="An old typewriter">
+      <img class="story-typewriter" src="assets/typewriter.png" alt="An old typewriter" data-i18n-alt="altTypewriter">
     </div>
   </div>
 </section>
@@ -112,7 +145,7 @@
 <!-- 5. References -->
 <section class="section refs">
   <div class="wrap">
-    <h2 class="reveal">You&rsquo;ll Love Cauldron Inn If You Like This</h2>
+    <h2 class="reveal" data-i18n="refsTitle">You&rsquo;ll Love Cauldron Inn If You Like This</h2>
     <div class="refs-stage reveal">
       <div class="refs-board">
         <div class="refs-grid">
@@ -136,16 +169,16 @@
       </div>
       <div class="refs-out-row">
         <figure class="refs-out refs-out-xfiles">
-          <img src="assets/ref-xfiles.webp" alt="The X-Files">
-          <figcaption><span>The X-Files</span><!--Investigations of the unexplained--></figcaption>
+          <img src="assets/ref-xfiles.webp" alt="The X-Files" data-i18n-alt="refXFiles">
+          <figcaption><span data-i18n="refXFiles">The X-Files</span><!--Investigations of the unexplained--></figcaption>
         </figure>
         <figure class="refs-out refs-out-gogol">
-          <img src="assets/ref-gogol.webp" alt="Portrait of Nikolai Gogol">
-          <figcaption><span>Slavic Fairy Tales</span><!--Dark folklore in the spirit of Gogol--></figcaption>
+          <img src="assets/ref-gogol.webp" alt="Portrait of Nikolai Gogol" data-i18n-alt="altGogol">
+          <figcaption><span data-i18n="refSlavic">Slavic Fairy Tales</span><!--Dark folklore in the spirit of Gogol--></figcaption>
         </figure>
         <figure class="refs-out refs-out-cabinet">
-          <img src="assets/ref-cabinet.webp" alt="Cabinet of Curiosities">
-          <figcaption><span>Cabinet of Curiosities</span><!--An anthology of beautiful nightmares--></figcaption>
+          <img src="assets/ref-cabinet.webp" alt="Cabinet of Curiosities" data-i18n-alt="refCabinet">
+          <figcaption><span data-i18n="refCabinet">Cabinet of Curiosities</span><!--An anthology of beautiful nightmares--></figcaption>
         </figure>
       </div>
     </div>
@@ -157,23 +190,23 @@
 <!-- 6. Mechanics -->
 <section class="section loop" id="mechanics">
   <div class="wrap">
-    <h2 class="reveal">Mechanics</h2>
+    <h2 class="reveal" data-i18n="mechTitle">Mechanics</h2>
     <div class="mech-row">
       <div class="loop-node reveal">
         <img src="assets/loop-anomaly.jpg" alt="">
-        <p>Carefully explore the environment and look for anomalies</p>
+        <p data-i18n="mech1">Carefully explore the environment and look for anomalies</p>
       </div>
       <div class="loop-node reveal">
         <img src="assets/loop-artifact.jpg" alt="">
-        <p>Search for hidden straw dolls that someone is sending you</p>
+        <p data-i18n="mech2">Search for hidden straw dolls that someone is sending you</p>
       </div>
       <div class="loop-node reveal">
         <img src="assets/loop-mask.jpg" alt="">
-        <p>Collect your memories through a mini-game</p>
+        <p data-i18n="mech3">Collect your memories through a mini-game</p>
       </div>
       <div class="loop-node reveal">
         <img src="assets/loop-crow.jpg" alt="">
-        <p>Two different endings depending on how many dolls you’ve collected</p>
+        <p data-i18n="mech4">Two different endings depending on how many dolls you’ve collected</p>
       </div>
     </div>
   </div>
@@ -184,19 +217,19 @@
 <!-- 7. Key Features -->
 <section class="section usp">
   <div class="wrap">
-    <h2 class="reveal">Key Features</h2>
+    <h2 class="reveal" data-i18n="uspTitle">Key Features</h2>
     <div class="usp-cols">
       <ul class="usp-list">
-        <li class="reveal">Dark Slavic fairy tale atmosphere with rich, intertwined lore and emotional story</li>
-        <li class="reveal">40+ unsettling anomalies with unique behaviors and mechanics</li>
-        <li class="reveal">6 hidden straw dolls that need to be found</li>
-        <li class="reveal">6 puzzle mini-games that reveal the plot</li>
+        <li class="reveal" data-i18n="usp1">Dark Slavic fairy tale atmosphere with rich, intertwined lore and emotional story</li>
+        <li class="reveal" data-i18n="usp2">40+ unsettling anomalies with unique behaviors and mechanics</li>
+        <li class="reveal" data-i18n="usp3">6 hidden straw dolls that need to be found</li>
+        <li class="reveal" data-i18n="usp4">6 puzzle mini-games that reveal the plot</li>
       </ul>
       <div class="usp-shots">
-        <img class="framed reveal" src="assets/usp-1.jpg" alt="Anomaly: a head served on a platter">
-        <img class="framed reveal" src="assets/usp-2.jpg" alt="A wicker figure by the window">
-        <img class="framed reveal" src="assets/usp-3.jpg" alt="A grinning mask behind the curtains">
-        <img class="framed reveal" src="assets/usp-4.jpg" alt="Puzzle mini-game revealing a memory">
+        <img class="framed reveal" src="assets/usp-1.jpg" alt="Anomaly: a head served on a platter" data-i18n-alt="altUsp1">
+        <img class="framed reveal" src="assets/usp-2.jpg" alt="A wicker figure by the window" data-i18n-alt="altUsp2">
+        <img class="framed reveal" src="assets/usp-3.jpg" alt="A grinning mask behind the curtains" data-i18n-alt="altUsp3">
+        <img class="framed reveal" src="assets/usp-4.jpg" alt="Puzzle mini-game revealing a memory" data-i18n-alt="altUsp4">
       </div>
     </div>
   </div>
@@ -254,15 +287,15 @@
 <section class="section author" id="about-me">
   <div class="wrap author-row">
     <div class="author-portrait reveal">
-      <img src="assets/selfie.webp" alt="Pavel Efremov — portrait in an antique oval frame">
+      <img src="assets/selfie.webp" alt="Pavel Efremov — portrait in an antique oval frame" data-i18n-alt="altPortrait">
     </div>
     <div class="author-info">
-      <h2 class="reveal">About Me</h2>
+      <h2 class="reveal" data-i18n="authorTitle">About Me</h2>
       <div class="author-bio">
-        <p class="reveal">Hi! My name is Pavel. I am a technical artist, art director and solo video game developer.</p>
-        <p class="reveal">Cauldron Inn is my first major game project, which I have been developing since late 2025. The game is rooted in the dark fairy tales that have long fascinated me and that I occasionally write myself.</p>
-        <p class="reveal">I strove to create the atmosphere of a bygone era&mdash;the turn of the century&mdash;and drew upon the Slavic aesthetic of dark storytelling when crafting the game&rsquo;s anomalies. Also you will encounter several memorable characters throughout the story.</p>
-        <p class="reveal">I hope players will be able to see the soul I poured into this game.</p>
+        <p class="reveal" data-i18n="author1">Hi! My name is Pavel. I am a technical artist, art director and solo video game developer.</p>
+        <p class="reveal" data-i18n="author2">Cauldron Inn is my first major game project, which I have been developing since late 2025. The game is rooted in the dark fairy tales that have long fascinated me and that I occasionally write myself.</p>
+        <p class="reveal" data-i18n="author3">I strove to create the atmosphere of a bygone era&mdash;the turn of the century&mdash;and drew upon the Slavic aesthetic of dark storytelling when crafting the game&rsquo;s anomalies. Also you will encounter several memorable characters throughout the story.</p>
+        <p class="reveal" data-i18n="author4">I hope players will be able to see the soul I poured into this game.</p>
       </div>
     </div>
   </div>
@@ -273,17 +306,17 @@
 <!-- 11. Media Kit -->
 <section class="section shots" id="media-kit">
   <div class="wrap">
-    <h2 class="reveal">Media Kit</h2>
+    <h2 class="reveal" data-i18n="mediaKitTitle">Media Kit</h2>
     <div class="shots-grid">
-      <img class="framed reveal" src="assets/shot-1.jpg" alt="Main menu of Cauldron Inn">
-      <img class="framed reveal" src="assets/shot-2.jpg" alt="Opening a dark door with a candle">
-      <img class="framed reveal" src="assets/shot-3.jpg" alt="A suitcase and a gramophone on a desk">
-      <img class="framed reveal" src="assets/shot-4.jpg" alt="Full moon over the dark forest">
-      <img class="framed reveal" src="assets/shot-5.jpg" alt="A bedroom bathed in red light">
-      <img class="framed reveal" src="assets/shot-6.jpg" alt="A bedroom with clocks on the wall">
+      <img class="framed reveal" src="assets/shot-1.jpg" alt="Main menu of Cauldron Inn" data-i18n-alt="altShot1">
+      <img class="framed reveal" src="assets/shot-2.jpg" alt="Opening a dark door with a candle" data-i18n-alt="altShot2">
+      <img class="framed reveal" src="assets/shot-3.jpg" alt="A suitcase and a gramophone on a desk" data-i18n-alt="altShot3">
+      <img class="framed reveal" src="assets/shot-4.jpg" alt="Full moon over the dark forest" data-i18n-alt="altShot4">
+      <img class="framed reveal" src="assets/shot-5.jpg" alt="A bedroom bathed in red light" data-i18n-alt="altShot5">
+      <img class="framed reveal" src="assets/shot-6.jpg" alt="A bedroom with clocks on the wall" data-i18n-alt="altShot6">
     </div>
     <p class="shots-cta reveal">
-      <a class="presskit-btn" href="https://www.dropbox.com/scl/fo/sg7j8khw7mwzvhf98xg59/AA5vyfiGO1DJafVEgjKG46Y?rlkey=o7ux6tuu0w7fjqwzqslfqrgg5&amp;st=qma2tcs4&amp;dl=0" target="_blank" rel="noopener">Download Press Kit</a>
+      <a class="presskit-btn" href="https://www.dropbox.com/scl/fo/sg7j8khw7mwzvhf98xg59/AA5vyfiGO1DJafVEgjKG46Y?rlkey=o7ux6tuu0w7fjqwzqslfqrgg5&amp;st=qma2tcs4&amp;dl=0" target="_blank" rel="noopener" data-i18n="pressKit">Download Press Kit</a>
     </p>
   </div>
 </section>
@@ -321,13 +354,13 @@
 
 <div class="subscribe-block">
   <form class="subscribe subscribe-bottom subscribe-note reveal" id="subscribe" data-source="footer" novalidate>
-    <p class="subscribe-label">Get important news and the release date</p>
+    <p class="subscribe-label" data-i18n="subscribeLabel">Get important news and the release date</p>
     <div class="subscribe-row">
-      <input class="subscribe-input" type="email" name="email" placeholder="your@email.com" aria-label="Email address" autocomplete="email" required>
-      <button class="subscribe-btn" type="submit">Subscribe</button>
+      <input class="subscribe-input" type="email" name="email" placeholder="your@email.com" aria-label="Email address" data-i18n-placeholder="emailPlaceholder" data-i18n-aria-label="emailLabel" autocomplete="email" required>
+      <button class="subscribe-btn" type="submit" data-i18n="subscribe">Subscribe</button>
     </div>
     <p class="subscribe-error" role="alert" hidden></p>
-    <p class="subscribe-done" role="status" hidden>You&rsquo;re subscribed. The Inn will send word.</p>
+    <p class="subscribe-done" role="status" hidden data-i18n="subscribeDone">You&rsquo;re subscribed. The Inn will send word.</p>
   </form>
 </div>
 
@@ -341,13 +374,13 @@
 
 <footer class="footer">
   <p class="footer-line">
-    <span class="footer-item">Contact: <a href="mailto:pavelefremov@me.com">pavelefremov@me.com</a></span>
+    <span class="footer-item"><span data-i18n="footerContact">Contact:</span> <a href="mailto:pavelefremov@me.com">pavelefremov@me.com</a></span>
     <span class="footer-sep">&middot;</span>
     <span class="footer-item">&copy; 2026 Oxygen Chick</span>
     <span class="footer-sep">&middot;</span>
-    <span class="footer-item">Cauldron Inn</span>
+    <span class="footer-item" data-i18n="gameName">Cauldron Inn</span>
   </p>
-  <p class="footer-legal">P.T., Exit 8, Ten Bells, Who&rsquo;s at the Door, The X-Files, Guillermo del Toro&rsquo;s Cabinet of Curiosities and other referenced works belong to their respective copyright holders and are mentioned for reference purposes only.</p>
+  <p class="footer-legal" data-i18n="footerLegal">P.T., Exit 8, Ten Bells, Who&rsquo;s at the Door, The X-Files, Guillermo del Toro&rsquo;s Cabinet of Curiosities and other referenced works belong to their respective copyright holders and are mentioned for reference purposes only.</p>
 </footer>
 
 <div class="lightbox" id="lightbox" hidden>
@@ -355,12 +388,13 @@
 </div>
 
 <div class="video-overlay" id="videoOverlay" hidden>
-  <button class="video-close" aria-label="Close">&times;</button>
+  <button class="video-close" aria-label="Close" data-i18n-aria-label="close">&times;</button>
   <div class="video-wrap">
     <iframe id="videoFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   </div>
 </div>
 
+<script src="i18n.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
