@@ -361,7 +361,9 @@ a { color: var(--cream); }
 .subscribe-btn:hover,
 .subscribe-btn:focus-visible { background: var(--cream); color: var(--bg); outline: none; }
 
-.subscribe.sending .subscribe-btn { opacity: .6; cursor: progress; }
+.subscribe-btn:disabled { pointer-events: none; }
+.subscribe.sending .subscribe-btn { opacity: .55; cursor: progress; }
+.subscribe.sending .subscribe-input { opacity: .55; pointer-events: none; }
 
 .subscribe-error {
   margin-top: .6rem;

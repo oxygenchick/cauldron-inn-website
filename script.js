@@ -96,7 +96,10 @@ subscribeForms.forEach((form) => {
     }
 
     form.querySelector('.subscribe-error').hidden = true;
+    const btn = form.querySelector('.subscribe-btn');
     form.classList.add('sending');
+    btn.disabled = true;
+    btn.textContent = 'Sending\u2026';
     try {
       // Apps Script answers through a cross-origin redirect, so the response is opaque
       await fetch(SUBSCRIBE_URL, {
@@ -106,8 +109,11 @@ subscribeForms.forEach((form) => {
       });
       markSubscribed();
     } catch {
-      form.classList.remove('sending');
       showSubscribeError(form, 'Something went wrong. Please try again.');
+    } finally {
+      form.classList.remove('sending');
+      btn.disabled = false;
+      btn.textContent = 'Subscribe';
     }
   });
 
