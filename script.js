@@ -62,8 +62,8 @@ videoOverlay.addEventListener('click', (e) => {
 document.querySelector('.video-close').addEventListener('click', closeVideo);
 
 // Newsletter forms (top and bottom share one state)
-// FormSubmit relays every new subscriber to this mailbox
-const SUBSCRIBE_URL = 'https://formsubmit.co/ajax/gsabaka@gmail.com';
+// Google Apps Script web app: stores the address and emails a daily list
+const SUBSCRIBE_URL = 'https://script.google.com/macros/s/AKfycby5k4uG3zeoxGy_Ad10-OVH3QjSddMnIbK5gyzPvY3To_MkXpPjwtm51cVLBjEGgkFx/exec';
 const subscribeForms = document.querySelectorAll('.subscribe');
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -98,18 +98,12 @@ subscribeForms.forEach((form) => {
     form.querySelector('.subscribe-error').hidden = true;
     form.classList.add('sending');
     try {
-      const res = await fetch(SUBSCRIBE_URL, {
+      // Apps Script answers through a cross-origin redirect, so the response is opaque
+      await fetch(SUBSCRIBE_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          email,
-          form: form.dataset.source || '',
-          _subject: `Cauldron Inn: new subscriber ${email}`,
-          _template: 'table',
-        }),
+        mode: 'no-cors',
+        body: new URLSearchParams({ email, source: form.dataset.source || '' }),
       });
-      const data = await res.json();
-      if (!res.ok || String(data.success) !== 'true') throw new Error(data.message);
       markSubscribed();
     } catch {
       form.classList.remove('sending');
