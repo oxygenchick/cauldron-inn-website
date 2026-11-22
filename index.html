@@ -4,21 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script>
-  // Pick the language before anything paints: ?lang= link, then a saved choice, then the browser
-  (function () {
-    var lang = new URLSearchParams(location.search).get('lang');
-    if (!lang) { try { lang = localStorage.getItem('lang'); } catch (e) {} }
-    if (lang !== 'en' && lang !== 'ru') {
-      var prefs = navigator.languages || [navigator.language || 'en'];
-      lang = 'en';
-      for (var i = 0; i < prefs.length; i++) {
-        var code = String(prefs[i]).slice(0, 2).toLowerCase();
-        if (code === 'en') break;
-        if (code === 'ru' || code === 'be' || code === 'kk') { lang = 'ru'; break; }
-      }
-    }
-    document.documentElement.lang = lang;
-  })();
+  // Language switching is off for now: the page stays English
+  document.documentElement.lang = 'en';
 
   // Point data-src-<lang> / data-srcset-<lang> images at the given language's files
   function setLangSources(lang) {
@@ -46,10 +33,6 @@
     <a class="topbar-trailer" href="#" data-trailer="https://www.youtube.com/embed/_yV61SsTjs4?autoplay=1&rel=0" data-i18n="navTrailer">Trailer</a>
     <a href="#media-kit" data-i18n="navMediaKit">Media Kit</a>
     <a class="topbar-cta" href="https://store.steampowered.com/app/4680470/Cauldron_Inn/" target="_blank" rel="noopener" data-i18n="navWishlist">Wishlist on Steam</a>
-    <div class="lang-switch" role="group" aria-label="Language">
-      <button type="button" data-set-lang="en" lang="en">EN</button>
-      <button type="button" data-set-lang="ru" lang="ru">RU</button>
-    </div>
   </nav>
 </header>
 

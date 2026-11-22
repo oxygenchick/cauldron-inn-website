@@ -184,32 +184,6 @@ a { color: var(--cream); }
 
 .topbar-cta:hover { background: var(--cream); color: var(--bg); text-decoration: none !important; }
 
-.lang-switch { display: flex; align-items: center; }
-.lang-switch button {
-  font: inherit;
-  color: inherit;
-  background: none;
-  border: 0;
-  padding: .2rem .3rem;
-  cursor: pointer;
-  opacity: .45;
-}
-.lang-switch button + button::before {
-  content: '/';
-  margin-right: .6rem;
-  opacity: .6;
-  display: inline-block;
-  pointer-events: none;
-}
-.lang-switch button:hover { opacity: .85; }
-.lang-switch button[aria-pressed="true"] {
-  opacity: 1;
-  cursor: default;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-.lang-switch button[aria-pressed="true"]::before { text-decoration: none; }
-
 @media (max-width: 640px) {
   .topbar-nav { font-size: .85rem; gap: .8rem; }
   .topbar-cta { padding: .3rem .7rem; }
